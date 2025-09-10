@@ -81,6 +81,22 @@ public class LoginView extends JFrame {
         header.add(lblTitulo, BorderLayout.WEST);
         header.add(lblAutor, BorderLayout.EAST);
 
+        //! Inicio de secion 
+
+        btnLogin.addActionListener(e -> {
+            String usuario = txtUsuario.getText();
+            String pass = new String(txtPassword.getPassword());
+
+            if (usuario.equals("admin") && pass.equals("1234")) {
+                dispose(); // cerrar login
+                new AdminView();
+            } else if (usuario.equals("usuario") && pass.equals("abcd")) {
+                dispose();
+                new UsuarioView();
+            } else {
+                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
+            }
+        });
         
 
         
