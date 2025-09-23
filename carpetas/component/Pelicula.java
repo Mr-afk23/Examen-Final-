@@ -1,21 +1,22 @@
 package carpetas.component;
 
 public class Pelicula {
-    private String titulo;
+    private String nombre;
     private String genero;
     private String duracion;
     private String clasificacion;
 
-    public Pelicula(String titulo, String genero, String duracion, String clasificacion) {
-        this.titulo = titulo;
+    // Constructor
+    public Pelicula(String nombre, String genero, String duracion, String clasificacion) {
+        this.nombre = nombre;
         this.genero = genero;
         this.duracion = duracion;
         this.clasificacion = clasificacion;
     }
 
-    // 🔹 Getters
-    public String getTitulo() {
-        return titulo;
+    // Getters
+    public String getNombre() {
+        return nombre;
     }
 
     public String getGenero() {
@@ -28,10 +29,5 @@ public class Pelicula {
 
     public String getClasificacion() {
         return clasificacion;
-    }
-
-    @Override
-    public String toString() {
-        return titulo;
     }
 }

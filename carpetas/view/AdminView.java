@@ -1,78 +1,68 @@
 package carpetas.view;
 
+import carpetas.view.admin.PanelTabla;
+import carpetas.view.admin.FormularioPelicula;
+import carpetas.view.admin.FormularioHorario;
+import carpetas.database.BaseDatos;
+
 import javax.swing.*;
-import java.awt.event.*;
-import carpetas.component.Pelicula;
-import carpetas.component.Horario;
-import carpetas.control.*;
+import java.awt.*;
 
 public class AdminView extends JFrame {
 
-    private JTextField txtTitulo, txtGenero, txtDuracion, txtClasificacion;
-    private JTextField txtHora, txtSala;
-
-    private ControlAdmin control = new ControlAdmin();
+    private JPanel contentPanel;
+    private CardLayout cardLayout;
 
     public AdminView() {
         setTitle("Panel de Admin - Cine");
-        setSize(400, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setExtendedState(JFrame.MAXIMIZED_BOTH); // pantalla completa
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        // === Panel izquierdo (menú) ===
+        JPanel menuPanel = new JPanel(new GridLayout(0, 1, 5, 5));
+        menuPanel.setBackground(Color.DARK_GRAY);
 
-        // --- Formulario Película ---
-        panel.add(new JLabel("Título:"));
-        txtTitulo = new JTextField(20);
-        panel.add(txtTitulo);
+        JButton btnEstrenos = new JButton("🎬 Estrenos");
+        JButton btnPrincipales = new JButton("⭐ Películas principales");
+        JButton btnAntiguas = new JButton("📼 Películas antiguas");
+        JButton btnAgregarPelicula = new JButton("➕ Agregar Película");
+        JButton btnAgregarHorario = new JButton("⏰ Agregar Horario");
 
-        panel.add(new JLabel("Género:"));
-        txtGenero = new JTextField(20);
-        panel.add(txtGenero);
+        JButton[] botones = { btnEstrenos, btnPrincipales, btnAntiguas, btnAgregarPelicula, btnAgregarHorario };
+        for (JButton b : botones) {
+            b.setFocusPainted(false);
+            b.setBackground(Color.LIGHT_GRAY);
+            menuPanel.add(b);
+        }
 
-        panel.add(new JLabel("Duración:"));
-        txtDuracion = new JTextField(20);
-        panel.add(txtDuracion);
+        // === Panel derecho (CardLayout) ===
+        cardLayout = new CardLayout();
+        contentPanel = new JPanel(cardLayout);
 
-        panel.add(new JLabel("Clasificación:"));
-        txtClasificacion = new JTextField(20);
-        panel.add(txtClasificacion);
+        // Columnas para las tablas
+        String[] columnas = { "Título", "Género", "Duración", "Clasificación" };
 
-        JButton btnAddPelicula = new JButton("Agregar Película");
-        btnAddPelicula.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Pelicula p = new Pelicula(
-                        txtTitulo.getText(),
-                        txtGenero.getText(),
-                        txtDuracion.getText(),
-                        txtClasificacion.getText());
-                        control.agregarPelicula(p);
-                JOptionPane.showMessageDialog(null, "Película agregada con éxito");
-            }
-        });
-        panel.add(btnAddPelicula);
+        // Agregar paneles con las listas de BaseDatos
+        contentPanel.add(new PanelTabla("Lista de Estrenos", BaseDatos.estrenos, columnas), "estrenos");
+        contentPanel.add(new PanelTabla("Películas Principales", BaseDatos.principales, columnas), "principales");
+        contentPanel.add(new PanelTabla("Películas Antiguas", BaseDatos.antiguas, columnas), "antiguas");
+        contentPanel.add(new FormularioPelicula(), "agregarPelicula");
+        contentPanel.add(new FormularioHorario(), "agregarHorario");
 
-        // --- Formulario Horario ---
-        panel.add(new JLabel("Hora:"));
-        txtHora = new JTextField(20);
-        panel.add(txtHora);
+        // Conectar botones con el CardLayout
+        btnEstrenos.addActionListener(e -> cardLayout.show(contentPanel, "estrenos"));
+        btnPrincipales.addActionListener(e -> cardLayout.show(contentPanel, "principales"));
+        btnAntiguas.addActionListener(e -> cardLayout.show(contentPanel, "antiguas"));
+        btnAgregarPelicula.addActionListener(e -> cardLayout.show(contentPanel, "agregarPelicula"));
+        btnAgregarHorario.addActionListener(e -> cardLayout.show(contentPanel, "agregarHorario"));
 
-        panel.add(new JLabel("Sala:"));
-        txtSala = new JTextField(20);
-        panel.add(txtSala);
+        // === SplitPane (menú + contenido) ===
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, menuPanel, contentPanel);
+        add(splitPane);
 
-        JButton btnAddHorario = new JButton("Agregar Horario");
-        btnAddHorario.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Horario h = new Horario(txtHora.getText(), txtSala.getText());
-                control.agregarHorario(h);
-                JOptionPane.showMessageDialog(null, "Horario agregado con éxito");
-            }
-        });
-        panel.add(btnAddHorario);
+        // Ajustar tamaño del divider después de mostrar ventana
+        SwingUtilities.invokeLater(() -> splitPane.setDividerLocation(200));
 
-        add(panel);
-        setVisible(true);
+        setVisible(true); // mostrar ventana
     }
 }

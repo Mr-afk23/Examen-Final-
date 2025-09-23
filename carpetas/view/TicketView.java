@@ -1,20 +1,20 @@
 package carpetas.view;
 
-
-import javax.swing.*;
 import carpetas.component.Ticket;
+import javax.swing.*;
+import java.awt.*;
 
 public class TicketView extends JFrame {
+
     public TicketView(Ticket ticket) {
-        setTitle("🎟️ Ticket de Cine");
-        setSize(300, 300);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setTitle("Ticket - " + ticket.getPelicula().getNombre());
+        setSize(400, 300);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLayout(new BorderLayout());
 
-        JTextArea area = new JTextArea(ticket.generarTicket());
-        area.setEditable(false);
-
-        add(new JScrollPane(area));
-        setVisible(true);
+        JTextArea txtTicket = new JTextArea(ticket.generarTicket());
+        txtTicket.setEditable(false);
+        txtTicket.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        add(txtTicket, BorderLayout.CENTER);
     }
 }

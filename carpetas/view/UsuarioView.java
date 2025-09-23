@@ -1,55 +1,58 @@
 package carpetas.view;
 
+import carpetas.view.usuario.*;
+
 import javax.swing.*;
-import java.awt.event.*;
-import carpetas.database.BaseDatos;
-import carpetas.component.Pelicula;
-import carpetas.component.Horario;
-import carpetas.component.Ticket;
-import carpetas.control.ControlUsuario;
+import java.awt.*;
 
 public class UsuarioView extends JFrame {
-    private JComboBox<Pelicula> cbPeliculas;
-    private JComboBox<Horario> cbHorarios;
-    private JTextField txtNombre;
-    private ControlUsuario control = new ControlUsuario();
+
+    private JPanel contentPanel;
+    private CardLayout cardLayout;
 
     public UsuarioView() {
-        setTitle("Panel Usuario - Reservar Película");
-        setSize(400, 300);
+        setTitle("Cine Tenshi - Usuario");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        // === Menú lateral ===
+        JPanel menuPanel = new JPanel(new GridLayout(0, 1, 5, 5));
+        menuPanel.setBackground(Color.DARK_GRAY);
 
-        panel.add(new JLabel("Nombre del Usuario:"));
-        txtNombre = new JTextField(20);
-        panel.add(txtNombre);
+        JButton btnProximamente = new JButton("🎥 Próximamente");
+        JButton btnEstrenos = new JButton("✨ Estrenos");
+        JButton btnActuales = new JButton("📺 Actuales");
+        JButton btnAntiguas = new JButton("📼 Antiguas");
 
-        panel.add(new JLabel("Selecciona Película:"));
-        cbPeliculas = new JComboBox<>(BaseDatos.peliculas.toArray(new Pelicula[0]));
-        panel.add(cbPeliculas);
+        JButton[] botones = { btnProximamente, btnEstrenos, btnActuales, btnAntiguas };
+        for (JButton b : botones) {
+            b.setFocusPainted(false);
+            b.setBackground(Color.LIGHT_GRAY);
+            menuPanel.add(b);
+        }
 
-        panel.add(new JLabel("Selecciona Horario:"));
-        cbHorarios = new JComboBox<>(BaseDatos.horarios.toArray(new Horario[0]));
-        panel.add(cbHorarios);
+        // === Contenido con CardLayout ===
+        cardLayout = new CardLayout();
+        contentPanel = new JPanel(cardLayout);
 
-        JButton btnReservar = new JButton("Reservar");
-        btnReservar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Pelicula p = (Pelicula) cbPeliculas.getSelectedItem();
-                Horario h = (Horario) cbHorarios.getSelectedItem();
-                String nombre = txtNombre.getText();
+        contentPanel.add(new PanelProximamente(), "proximamente");
+        contentPanel.add(new PanelEstrenos(), "estrenos");
+        contentPanel.add(new PanelActuales(), "actuales");
+        contentPanel.add(new PanelAntiguas(), "antiguas");
 
-                Ticket ticket = control.reservar(nombre, p, h);
-                dispose();
-                new TicketView(ticket);
-            }
-        });
+        // Acciones de botones
+        btnProximamente.addActionListener(e -> cardLayout.show(contentPanel, "proximamente"));
+        btnEstrenos.addActionListener(e -> cardLayout.show(contentPanel, "estrenos"));
+        btnActuales.addActionListener(e -> cardLayout.show(contentPanel, "actuales"));
+        btnAntiguas.addActionListener(e -> cardLayout.show(contentPanel, "antiguas"));
 
-        panel.add(btnReservar);
-        add(panel);
+        // === Layout dividido ===
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, menuPanel, contentPanel);
+        splitPane.setDividerLocation(200);
+
+        add(splitPane);
         setVisible(true);
     }
+
 }
