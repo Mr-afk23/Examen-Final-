@@ -16,11 +16,10 @@ public class PanelAntiguas extends JPanel {
 
         // Lista de películas (cada array: {titulo, genero, duracion, rutaImagen})
         Object[][] antiguas = {
-                { "Titanic", "Drama", "195 min", "assets/avatar2.jpeg" }, // ⚠️ no tienes titanic, usamos avatar2 como
-                                                                          // demo
-                { "Toy Story", "Animación", "80 min", "assets/buzz.jpeg" }, // ⚠️ tampoco toy story, usamos buzz
-                { "Matrix", "Ciencia Ficción", "140 min", "assets/nope.jpeg" }, // ⚠️ no tienes matrix, usamos nope
-                { "El Rey León", "Animación", "88 min", "assets/sonic.jpeg" } // ⚠️ no tienes rey león, usamos sonic
+                { "Titanic", "Drama", "195 min", "assets/titanic.jpg" }, 
+                { "Toy Story", "Animación", "80 min", "assets/toyStory.jpeg" }, 
+                { "Matrix", "Ciencia Ficción", "140 min", "assets/Matrix.png" }, 
+                { "El Rey León", "Animación", "88 min", "assets/reyLeon.jpeg" } 
         };
 
         // Panel con FlowLayout para que las tarjetas se acomoden automáticamente
